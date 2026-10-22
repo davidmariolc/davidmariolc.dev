@@ -1,0 +1,58 @@
+---
+title: Relevo
+description: "A landing page for a fictional cloud AI agent platform, built to learn SVG animation and design a striking hero section."
+type: learning
+category: landing-page
+date: 2026-10-22
+order: 8
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/relevo/hero
+  alt: Relevo cover showing the landing page headline and a network of isometric machines against an orange and red background
+  width: 1920
+  height: 1080
+stack:
+  - name: Astro
+    logo: astro
+  - name: TypeScript
+    logo: typescript
+  - name: CSS
+  - name: SVG
+  - name: Motion
+  - name: Web Animations API
+links:
+  live: https://relevo-sable.vercel.app/
+  repository: https://github.com/DavidMarioLC/relevo
+---
+
+## Snapshot
+
+- **Goal** — test how to build a striking hero with SVG animation at the piece level, while keeping the complete illustration visible when motion is skipped.
+- **Scope** — a responsive English landing page with five SVG scenes, a mobile menu, and a plan comparison. No backend, authentication, or payments.
+- **What I verified** — the documented checks record identical final hero renders after animation, without JavaScript, and with reduced motion; they also record six viewport widths from 320 to 1920 px without horizontal overflow.
+
+## Why this project
+
+I wanted to learn SVG animation and design a striking hero section. A fictional cloud agent platform gave me a setting to practice with connections, machines, and isometric illustrations. Astro generates the static HTML and scripts add the interactions; the demo's commercial claims are sample copy.
+
+## Key decisions
+
+- **Replace the hero PNG with inline SVG** — building the illustration in stages required independent pieces. The cost is maintaining geometry, layers, and timing for 243 animated pieces; the full sequence lasts 2.4 seconds.
+- **Separate text entrance, illustration assembly, and ambient activity** — on mobile, the heading can finish entering before the illustration reaches the viewport. That means coordinating three processes: assembly waits until it is visible, and ambient activity waits for the entrances to finish.
+- **Render the complete illustration by default** — a delayed script or reduced motion preference should never leave pieces hidden. This adds exit paths and safety timers; an interruption completes the drawing and skips the remaining sequence.
+
+## What I learned
+
+- Static fidelity and individually animated geometry need separate checks. The original PNG with an SVG activity overlay preserved the reference, but it could not build the drawing piece by piece and had to be replaced.
+- Start time depends on visibility as well as elapsed time. Tying assembly to the end of the text entrance could use up the animation before someone reached it on mobile.
+
+## What I'd do differently
+
+- Decide whether the illustration needs animation at the piece level before choosing its format, avoiding a hybrid implementation that later has to be replaced.
+
+## Evidence
+
+The [hero design and verification record](https://github.com/DavidMarioLC/relevo/blob/d2e35efcf014941684af668460d7a1a160d5025b/openspec/changes/archive/2026-10-22-assemble-hero-illustration/design.md) documents 22 integration checks in local Chromium and zero remaining assembly effects after completion. Some visibility conditions were simulated; this does not establish physical phone testing or Core Web Vitals measurements.
+
+The [typed timeline](https://github.com/DavidMarioLC/relevo/blob/d2e35efcf014941684af668460d7a1a160d5025b/src/data/hero-assembly.ts) separates the drawing phases. The [assembly coordinator](https://github.com/DavidMarioLC/relevo/blob/d2e35efcf014941684af668460d7a1a160d5025b/src/scripts/hero-assembly.ts) handles exits for pause, reduced motion, resizing, and visibility loss.

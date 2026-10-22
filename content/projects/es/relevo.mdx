@@ -1,0 +1,58 @@
+---
+title: Relevo
+description: "Landing de una plataforma ficticia de agentes de IA en la nube, creada para aprender animación SVG y diseñar un hero de impacto."
+type: learning
+category: landing-page
+date: 2026-10-22
+order: 8
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/relevo/hero
+  alt: Portada de Relevo con el titular de la landing y una red de máquinas isométricas sobre un fondo naranja y rojo
+  width: 1920
+  height: 1080
+stack:
+  - name: Astro
+    logo: astro
+  - name: TypeScript
+    logo: typescript
+  - name: CSS
+  - name: SVG
+  - name: Motion
+  - name: Web Animations API
+links:
+  live: https://relevo-sable.vercel.app/
+  repository: https://github.com/DavidMarioLC/relevo
+---
+
+## Snapshot
+
+- **Objetivo** — comprobar cómo construir un hero de impacto con animaciones SVG por piezas, manteniendo la ilustración completa cuando el movimiento se omite.
+- **Alcance** — landing responsive en inglés con cinco escenas SVG, menú móvil y comparador de planes. Sin backend, autenticación ni pagos.
+- **Qué comprobé** — la verificación documentada registra el mismo render final del hero al terminar la animación, sin JavaScript y con movimiento reducido; también registra seis anchos entre 320 y 1920 px sin desbordamiento horizontal.
+
+## Por qué este proyecto
+
+Quería aprender a crear animaciones con SVG y diseñar un hero de impacto. Una plataforma ficticia de agentes en la nube me permitió practicar con conexiones, máquinas e ilustraciones isométricas. Astro genera el HTML estático y los scripts añaden las interacciones; las promesas comerciales de la demo son contenido de ejemplo.
+
+## Decisiones clave
+
+- **Sustituir el PNG del hero por SVG inline** — necesitaba piezas independientes para construir la ilustración por etapas. A cambio, mantengo geometría, capas y tiempos para 243 piezas animables; la secuencia completa dura 2,4 segundos.
+- **Separar entrada de texto, construcción y actividad ambiental** — en móvil, el título puede terminar de entrar antes de que la ilustración sea visible. A cambio, coordino tres procesos: la construcción espera a verse y la actividad ambiental espera a que las entradas terminen.
+- **Mostrar la ilustración completa por defecto** — un script tardío o una preferencia de movimiento reducido no debe dejar piezas ocultas. A cambio, mantengo rutas de salida y temporizadores de seguridad; una interrupción completa el dibujo y omite el resto de la secuencia.
+
+## Qué aprendí
+
+- La fidelidad estática y la posibilidad de animar cada pieza exigen comprobaciones distintas. El enfoque inicial de PNG con actividad SVG superpuesta conservaba la referencia, pero no permitía construir su geometría por partes y tuvo que sustituirse.
+- El momento de inicio depende de qué se ve, además del tiempo transcurrido. Vincular la construcción al final de la entrada textual podía consumirla antes de llegar a ella en móvil.
+
+## Qué haría distinto
+
+- Definiría la necesidad de animar por piezas antes de elegir el formato de la ilustración, para evitar pasar por una solución híbrida que después debía reemplazar.
+
+## Evidencia
+
+El [diseño y registro de verificación del hero](https://github.com/DavidMarioLC/relevo/blob/d2e35efcf014941684af668460d7a1a160d5025b/openspec/changes/archive/2026-10-22-assemble-hero-illustration/design.md) documenta 22 comprobaciones de integración en Chromium local y cero efectos de construcción pendientes al finalizar. Algunas condiciones de visibilidad se simularon; no acredita pruebas en un teléfono físico ni mediciones de Core Web Vitals.
+
+La [cronología tipada](https://github.com/DavidMarioLC/relevo/blob/d2e35efcf014941684af668460d7a1a160d5025b/src/data/hero-assembly.ts) separa las fases del dibujo y el [coordinador de construcción](https://github.com/DavidMarioLC/relevo/blob/d2e35efcf014941684af668460d7a1a160d5025b/src/scripts/hero-assembly.ts) recoge las salidas por pausa, movimiento reducido, cambio de tamaño y pérdida de visibilidad.
