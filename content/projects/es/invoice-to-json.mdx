@@ -1,0 +1,67 @@
+---
+title: invoice-to-json
+description: "De imagen de factura a JSON: una web de práctica para explorar Structured Outputs, JSON Schema y validación de respuestas de IA."
+type: learning
+category: web-app
+date: 2026-10-29
+order: 9
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/invoice-to-json/hero
+  alt: Interfaz de invoice-to-json con una factura ficticia y su JSON de ejemplo en dos columnas
+  width: 1920
+  height: 1080
+stack:
+  - name: React
+    logo: react
+  - name: TypeScript
+    logo: typescript
+  - name: Vite
+  - name: Tailwind CSS
+    logo: tailwindcss
+  - name: shadcn/ui
+    logo: shadcn
+  - name: Python
+    logo: python
+  - name: FastAPI
+    logo: fastapi
+  - name: Pydantic
+  - name: Zod
+  - name: Gemini
+  - name: Vercel
+links:
+  live: https://invoice-to-json.vercel.app/
+  repository: https://github.com/davidmariolc/invoice-to-json
+---
+
+## Snapshot
+
+- **Objetivo** — comprobar cómo convertir la salida de un modelo de IA en datos que una aplicación pueda validar, usando un contrato generado desde Pydantic.
+- **Alcance** — 2 horas de trabajo: una imagen JPEG, PNG o WEBP de hasta 4 MB por petición, extracción y visor JSON; sin historial ni conciliación contable.
+- **Qué comprobé** — probé 3 facturas reales sin observar errores de extracción; los campos esperados que no aparecían en el documento quedaron como `null`.
+
+## Por qué este proyecto
+
+Una factura obliga a definir qué hacer con datos anidados, identificadores con ceros iniciales y campos ilegibles. La usé para practicar el recorrido completo del contrato: generarlo desde Pydantic, compartirlo con Gemini mediante su SDK nativo y validar la respuesta antes de mostrarla en el navegador.
+
+## Decisiones clave
+
+- **Generar el JSON Schema desde Pydantic** — el modelo que describe la extracción también valida la respuesta del proveedor. A cambio, el contrato del navegador sigue definido por separado en Zod: mantengo dos representaciones que pueden divergir.
+- **Campos obligatorios pero anulables** — `null` representa información ausente sin cambiar la estructura; los identificadores se conservan como texto. A cambio, quien consume el JSON debe tratar explícitamente los datos desconocidos y no puede asumir que los importes estén completos.
+- **Usar `gemini-3.5-flash-lite`** — pude completar la extracción después de recibir errores con modelos más nuevos. A cambio, el experimento queda limitado al comportamiento de ese modelo, sin selección de alternativas desde la interfaz.
+
+## Qué aprendí
+
+- Pedir JSON no basta para definir un contrato. El esquema permite exigir propiedades y tipos; la validación comprueba que la respuesta los cumple. Ninguna de las dos garantiza que el importe leído coincida con el documento.
+- Los modelos más nuevos que probé devolvían errores que parecían indicar saturación. Cambiar a `gemini-3.5-flash-lite` me permitió continuar: la disponibilidad del modelo también condicionó qué pude comprobar.
+
+## Qué haría distinto
+
+- Permitiría elegir entre distintos esquemas de salida desde la interfaz. Hoy el contrato de factura está fijado; escoger otra estructura permitiría explorar cómo cambian las instrucciones y la validación para cada salida.
+
+## Evidencia
+
+- **Prueba manual con 3 facturas reales** — no observé errores de extracción y los datos ausentes quedaron como `null`. Es el resultado de esas tres pruebas, no una medición general de precisión.
+- [Contrato de extracción](https://github.com/davidmariolc/invoice-to-json/blob/main/fastapi/app/features/invoices/schemas.py): modelos anidados que rechazan propiedades adicionales y permiten valores `null` sin omitir los campos.
+- [Pruebas del endpoint](https://github.com/davidmariolc/invoice-to-json/blob/main/fastapi/tests/test_invoices.py): inspeccionan la imagen y el esquema enviados al SDK y comprueban los errores HTTP y los campos desconocidos. Las respuestas del proveedor son simuladas.

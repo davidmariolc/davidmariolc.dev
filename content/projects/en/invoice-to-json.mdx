@@ -1,0 +1,67 @@
+---
+title: invoice-to-json
+description: "An invoice image to JSON practice app for exploring Structured Outputs, JSON Schema, and validation of AI responses."
+type: learning
+category: web-app
+date: 2026-10-29
+order: 9
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/invoice-to-json/hero
+  alt: invoice-to-json interface with a fictional invoice and its sample JSON displayed side by side
+  width: 1920
+  height: 1080
+stack:
+  - name: React
+    logo: react
+  - name: TypeScript
+    logo: typescript
+  - name: Vite
+  - name: Tailwind CSS
+    logo: tailwindcss
+  - name: shadcn/ui
+    logo: shadcn
+  - name: Python
+    logo: python
+  - name: FastAPI
+    logo: fastapi
+  - name: Pydantic
+  - name: Zod
+  - name: Gemini
+  - name: Vercel
+links:
+  live: https://invoice-to-json.vercel.app/
+  repository: https://github.com/davidmariolc/invoice-to-json
+---
+
+## Snapshot
+
+- **Goal** — test how to turn an AI model's output into data an application can validate, using a contract generated from Pydantic.
+- **Scope** — 2 hours of work: one JPEG, PNG, or WEBP image up to 4 MB per request, extraction, and a JSON viewer; no history or accounting reconciliation.
+- **What I verified** — I tested 3 real invoices without observing extraction errors; expected fields missing from the document were returned as `null`.
+
+## Why this project
+
+Invoices force decisions about nested data, identifiers with leading zeros, and unreadable fields. I used them to practice the contract's full journey: generate it from Pydantic, send it to Gemini through the native SDK, and validate the response before displaying it in the browser.
+
+## Key decisions
+
+- **Generate JSON Schema from Pydantic** — the model describing the extraction also validates the provider's response. The cost is a separate Zod definition in the browser: I maintain two representations that can drift apart.
+- **Require fields while allowing null values** — `null` represents missing information without changing the structure, and identifiers stay as strings. Consumers must handle unknown values explicitly and cannot assume amounts are complete.
+- **Use `gemini-3.5-flash-lite`** — it let me complete extraction after newer models returned errors. The tradeoff is an experiment tied to that model's behavior, with no way to select alternatives in the interface.
+
+## What I learned
+
+- Asking for JSON does not define a contract. A schema specifies the required properties and types; validation checks whether the response meets those requirements. Neither guarantees that an extracted amount matches the document.
+- The newer models I tried returned errors that appeared to indicate overload. Switching to `gemini-3.5-flash-lite` let me continue: model availability also shaped what I could test.
+
+## What I'd do differently
+
+- Let users choose between output schemas in the interface. The invoice contract is currently fixed; choosing another structure would let me explore how instructions and validation need to change for each output.
+
+## Evidence
+
+- **Manual test with 3 real invoices** — I observed no extraction errors, and missing data came back as `null`. This describes those three tests, rather than an overall accuracy measurement.
+- [Extraction contract](https://github.com/davidmariolc/invoice-to-json/blob/main/fastapi/app/features/invoices/schemas.py): nested models reject extra properties and allow `null` values while still requiring the fields.
+- [Endpoint tests](https://github.com/davidmariolc/invoice-to-json/blob/main/fastapi/tests/test_invoices.py): inspect the image and schema sent through the SDK and check HTTP errors and unknown fields. Provider responses are simulated.
