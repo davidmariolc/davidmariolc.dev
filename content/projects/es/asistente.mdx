@@ -1,0 +1,59 @@
+---
+title: Asistente
+description: Chat de práctica para explorar function calling con modelos de IA mediante cálculos, consultas del clima y búsquedas en notas ficticias.
+type: learning
+category: web-app
+date: 2026-11-10
+order: 10
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/asistente/hero
+  alt: Pantalla inicial de Asistente con el historial lateral y accesos a cálculos, clima y búsqueda de notas
+  width: 1920
+  height: 1080
+stack:
+  - name: React
+    logo: react
+  - name: TypeScript
+    logo: typescript
+  - name: Vite+
+  - name: Python
+    logo: python
+  - name: FastAPI
+    logo: fastapi
+  - name: Pydantic
+  - name: Groq
+links:
+  live: https://tool-call-lab-vyqz.vercel.app/
+  repository: https://github.com/davidmariolc/tool-call-lab
+---
+
+## Snapshot
+
+- **Objetivo** — comprobar si una petición en lenguaje natural puede activar varias llamadas a funciones, encadenar sus resultados y mostrarlos junto a la explicación del modelo.
+- **Alcance** — cuatro funciones para cálculos, clima y consultas sobre notas ficticias. El historial queda en el navegador y el modelo procesa cada mensaje de forma independiente.
+- **Qué comprobé** — en una prueba con respuestas simuladas del modelo, una petición ejecutó tres llamadas en dos rondas y devolvió tres tarjetas junto con el texto final.
+
+## Por qué este proyecto
+
+Elegí tareas cuyo resultado se puede contrastar con su fuente. Un cálculo se puede repetir y un dato del clima se puede cotejar con la observación de Open-Meteo. Eso me permitió seguir el recorrido desde la llamada solicitada por el modelo hasta el dato que termina en el chat.
+
+## Decisiones clave
+
+- **Construir las tarjetas en el backend** — cada tarjeta toma sus campos del resultado de la función. El modelo redacta la explicación y la interfaz muestra, por ejemplo, la temperatura con su unidad y hora de observación. Cada nuevo tipo de tarjeta requiere definir su esquema en la API y cómo se renderiza en React.
+- **Permitir llamadas en varias rondas** — al devolver cada resultado con el identificador de su llamada, el modelo puede usarlo para pedir otra operación. Cada ronda añade una petición al proveedor, así que reservé la última de un máximo de seis para que el modelo cierre con texto.
+- **Separar el chat de la API** — pasé de una página servida por FastAPI a un frontend independiente que consume el endpoint. Eso me permitió desplegarlos por separado a cambio de configurar cómo se conecta el navegador con la API.
+
+## Qué aprendí
+
+- La primera prueba con una calculadora fija sirvió para recorrer una llamada. Ese enfoque se quedó corto cuando quise devolver varias salidas y permitir que una operación usara el resultado de la anterior.
+- Una búsqueda sin coincidencias y una herramienta que falla necesitan respuestas distintas. El contrato conserva esa diferencia y permite mostrar una tarjeta vacía o un error según el caso.
+
+## Qué haría distinto
+
+- Prepararía un conjunto de peticiones en lenguaje natural para medir con qué frecuencia el modelo elige la función y los argumentos esperados. Las pruebas actuales del backend comprueban el contrato con respuestas simuladas.
+
+## Evidencia
+
+- Ocho pruebas del backend cubren las respuestas directas, las llamadas encadenadas, los errores y el límite de rondas. [Pruebas del endpoint](https://github.com/davidmariolc/tool-call-lab/blob/0af200d4fdd1c243efb2998f87595beb483d80f2/fastapi/tests/test_assistant.py)

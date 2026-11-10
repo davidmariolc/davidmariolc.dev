@@ -1,0 +1,59 @@
+---
+title: Asistente
+description: A chat app for practicing function calling with AI models through calculations, weather lookups, and searches over sample notes.
+type: learning
+category: web-app
+date: 2026-11-10
+order: 10
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/asistente/hero
+  alt: Asistente home screen with a conversation sidebar and shortcuts for calculations, weather, and note search
+  width: 1920
+  height: 1080
+stack:
+  - name: React
+    logo: react
+  - name: TypeScript
+    logo: typescript
+  - name: Vite+
+  - name: Python
+    logo: python
+  - name: FastAPI
+    logo: fastapi
+  - name: Pydantic
+  - name: Groq
+links:
+  live: https://tool-call-lab-vyqz.vercel.app/
+  repository: https://github.com/davidmariolc/tool-call-lab
+---
+
+## Snapshot
+
+- **Goal** — see whether one natural-language request could trigger multiple function calls, chain their results, and display them alongside the model's explanation.
+- **Scope** — four functions for calculations, weather, and lookups over sample notes. Conversation history stays in the browser, and the model handles each message independently.
+- **What I verified** — in a test with simulated model responses, one request ran three calls over two rounds and returned three cards alongside the final reply.
+
+## Why this project
+
+I chose tasks where I could check the output against its source. A calculation can be repeated, and a weather reading can be checked against the original Open-Meteo observation. That gave me a way to follow the data from the model's function call to the chat interface.
+
+## Key decisions
+
+- **Build result cards on the backend** — each card gets its fields from the function's output. The model writes the explanation, while the interface can show the temperature with its unit and observation time. Each new card type needs an API schema and a way to render it in React.
+- **Allow multiple rounds of calls** — returning each result with its call ID lets the model use it to request another operation. Each round adds a request to the provider, so I capped the loop at six rounds and reserved the last one for a text reply.
+- **Separate the chat from the API** — I replaced the page served by FastAPI with a standalone frontend that calls the endpoint. That let me deploy the two independently and meant configuring how the browser reaches the API.
+
+## What I learned
+
+- The first calculator stub was enough to walk through a single call. It fell short once I wanted to return several results and let one operation build on the previous result.
+- A search with no matches and a failed tool call need different responses. The contract preserves that distinction so the UI can show an empty result or an error as appropriate.
+
+## What I'd do differently
+
+- I'd put together a set of natural-language prompts to measure how often the model picks the expected function and arguments. The current backend tests check the contract with simulated responses.
+
+## Evidence
+
+- Eight backend tests cover direct replies, chained calls, errors, and the round limit. [Endpoint tests](https://github.com/davidmariolc/tool-call-lab/blob/0af200d4fdd1c243efb2998f87595beb483d80f2/fastapi/tests/test_assistant.py)
