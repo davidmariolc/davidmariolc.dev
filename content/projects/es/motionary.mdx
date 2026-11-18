@@ -1,0 +1,55 @@
+---
+title: Motionary
+description: Diccionario visual de animaciones de interfaz para diseñadores y desarrolladores que buscan identificar un efecto y describirlo en un prompt para IA.
+type: real
+category: website
+date: 2026-11-05
+order: 11
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/motionary/hero
+  alt: Portada de Motionary en español con la demostración de entrada escalonada y cuatro bloques alineados
+  width: 1920
+  height: 1080
+stack:
+  - name: Next.js
+    logo: nextjs
+  - name: React
+    logo: react
+  - name: TypeScript
+    logo: typescript
+  - name: Web Animations API
+  - name: next-intl
+  - name: GSAP
+  - name: Tailwind CSS
+    logo: tailwindcss
+links:
+  live: https://motionary-mu.vercel.app/
+  repository: https://github.com/davidmariolc/motionary
+---
+
+## Snapshot
+
+- **Rol** — Diseñé y desarrollé el sitio.
+- **Alcance** — De encontrar el nombre de un efecto a copiar un prompt que describe cómo reproducirlo.
+- **Resultado** — Publiqué un catálogo de 24 estudios interactivos en cuatro categorías.
+
+## El problema
+
+Cuando quiero reproducir una animación que vi en otra interfaz, suelo recordar qué se movía y en qué orden. Buscar una referencia se vuelve más difícil si desconozco el nombre del efecto o si términos como *bounce* y *overshoot* se usan para describir movimientos parecidos.
+
+## Decisiones clave
+
+- **Mostrar el movimiento en el catálogo**. Puse demostraciones reproducibles en las tarjetas para poder comparar efectos antes de abrir un estudio. La reproducción automática añadió estados que gestionar cuando una tarjeta sale de la pantalla, se oculta la pestaña o el usuario prefiere reducir el movimiento.
+- **Guardar la búsqueda y la categoría en la URL**. Así se puede compartir una selección concreta de estudios. Recuperar la posición al volver de una ficha requirió guardar el desplazamiento por separado en el navegador.
+- **Compartir identificadores y tiempos entre idiomas**. Al cambiar de idioma se mantiene el mismo estudio, con su duración y su ritmo. Escribir la explicación y el prompt para cada idioma añadió trabajo editorial y exigió comprobar que las dos versiones estuvieran completas.
+
+## Resultado
+
+- Las 48 páginas de detalle del catálogo, 24 por idioma, devolvieron HTTP 200 en la demo pública.
+- La suite del repositorio comprueba que cada estudio tiene explicación, ejemplo de uso y prompt en ambos idiomas. También cubre búsquedas en español sin tilde y con términos en inglés, como `rubber band`.
+
+## Qué haría distinto
+
+- Añadiría desde el primer estudio una comprobación que cruce el catálogo con las composiciones visuales y los keyframes. Así detectaría si una entrada nueva tiene texto y ruta, pero le falta la demostración.

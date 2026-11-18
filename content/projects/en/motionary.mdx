@@ -1,0 +1,55 @@
+---
+title: Motionary
+description: A visual dictionary of UI animation for designers and developers who want to identify an effect and describe it in an AI prompt.
+type: real
+category: website
+date: 2026-11-05
+order: 11
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/motionary/hero
+  alt: Motionary homepage in Spanish with a staggered entrance demo showing four blocks in a row
+  width: 1920
+  height: 1080
+stack:
+  - name: Next.js
+    logo: nextjs
+  - name: React
+    logo: react
+  - name: TypeScript
+    logo: typescript
+  - name: Web Animations API
+  - name: next-intl
+  - name: GSAP
+  - name: Tailwind CSS
+    logo: tailwindcss
+links:
+  live: https://motionary-mu.vercel.app/
+  repository: https://github.com/davidmariolc/motionary
+---
+
+## Snapshot
+
+- **Role** — I designed and built the site.
+- **Scope** — From finding the name of an effect to copying a prompt that describes how to recreate it.
+- **Outcome** — I published a catalog of 24 interactive studies across four categories.
+
+## The problem
+
+When I want to recreate an animation I've seen in another interface, I usually remember what moved and in what order. Finding a reference gets harder when I don't know the name of the effect or when terms like *bounce* and *overshoot* describe similar movements.
+
+## Key decisions
+
+- **Put motion demos directly in the catalog**. I made them playable on each card so readers could compare effects before opening a study. Autoplay added states to handle when a card scrolls out of view, the tab is hidden, or a reader prefers reduced motion.
+- **Keep search and category filters in the URL**. That made a filtered set of studies shareable. Restoring the reader's place when they returned from a study took separate scroll-position storage in the browser.
+- **Share study IDs and timing across languages**. Readers stay on the same study when they switch languages, and the demo keeps its duration and rhythm. Writing explanations and prompts in both languages added editorial work and required checks for missing content.
+
+## Outcome
+
+- All 48 study pages in the public demo, 24 per language, returned HTTP 200.
+- The repository's tests check that each study has an explanation, a use case, and a prompt in both languages. They also cover Spanish searches with omitted accents and English terms such as `rubber band`.
+
+## What I'd do differently
+
+- I'd add a check from the first study that matches catalog entries against their visuals and keyframes. That would catch a new entry whose copy and URL are ready while its demo is still missing.
