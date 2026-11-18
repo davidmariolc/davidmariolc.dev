@@ -1,0 +1,70 @@
+---
+title: Simi
+description: Extensión de Chrome para quienes leen en inglés y quieren consultar la traducción al español junto al texto seleccionado.
+type: real
+category: browser-extension
+date: 2026-11-13
+order: 12
+preview:
+  publicId: portfolio/simi/hero
+  alt: Menú de Simi con la traducción automática activada y dos opciones para abrir un PDF
+  width: 1920
+  height: 1080
+stack:
+  - name: WXT
+  - name: TypeScript
+    logo: typescript
+  - name: React
+    logo: react
+  - name: Tailwind CSS
+    logo: tailwindcss
+  - name: Chrome Translator API
+  - name: PDF.js
+links:
+  live: https://chromewebstore.google.com/detail/simi-%E2%80%94-ingl%C3%A9s-a-espa%C3%B1ol/feikbapkiboicnkcgcinoekdeaiabgnf?hl=es
+  repository: https://github.com/davidmariolc/simi
+---
+
+## Snapshot
+
+- **Rol** — Diseñé, desarrollé y publiqué la extensión.
+- **Alcance** — Traducción del inglés al español en páginas web, notebooks de GitHub y PDFs abiertos en el visor de Simi.
+- **Resultado** — La versión 0.3.0 está disponible en Chrome Web Store.
+
+## El problema
+
+Al leer documentación en inglés, copiar una frase a otra pestaña para traducirla corta la lectura. Quería consultar el fragmento en español con el original todavía a la vista y retomar el párrafo desde el mismo punto.
+
+## Decisiones clave
+
+- **Anclar la burbuja a la selección.** La traducción aparece al terminar de seleccionar, junto al original. Eso requiere acceso a los sitios donde se activa Simi y recalcular la posición al hacer scroll o cambiar el tamaño de la ventana.
+- **Traducir con los modelos locales de Chrome.** El texto se procesa en el dispositivo. A cambio, la traducción depende de la disponibilidad del modelo para ese idioma y de los permisos de cada página. La primera activación puede requerir una descarga.
+- **Abrir los PDFs en un visor propio.** Con PDF.js pude reutilizar la traducción por selección dentro del documento. El lector tiene que abrir el PDF en Simi y el soporte se limita a documentos con texto seleccionable que el visor pueda abrir.
+
+## Resultado
+
+- La misma interacción permite consultar la traducción en una página web, en la vista previa de un notebook de GitHub o en el visor de Simi, con el fragmento original a la vista.
+- Las pruebas de Playwright en CI cubren la selección en páginas web y notebooks, y la navegación por el visor PDF.
+
+## Qué haría distinto
+
+- Automatizaría la comprobación de la primera traducción en un perfil limpio de Chrome para detectar regresiones durante la activación y la descarga del modelo. Esa comprobación se hace manualmente.
+
+## Galería
+
+<Gallery>
+  <PostImage
+    publicId="portfolio/simi/gallery-1"
+    alt="Ficha de Simi en Chrome Web Store con el botón Añadir a Chrome"
+    width={1920}
+    height={1080}
+    caption="La ficha pública permite instalar Simi directamente desde la tienda."
+  />
+  <PostImage
+    publicId="portfolio/simi/gallery-2"
+    alt="Frase en inglés resaltada en azul con su traducción al español en una burbuja"
+    width={1920}
+    height={1080}
+    caption="La burbuja deja a la vista la frase original para seguir leyendo el párrafo."
+  />
+</Gallery>

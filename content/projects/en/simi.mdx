@@ -1,0 +1,70 @@
+---
+title: Simi
+description: A Chrome extension for Spanish speakers reading in English. It shows the translation alongside the text they select.
+type: real
+category: browser-extension
+date: 2026-11-13
+order: 12
+preview:
+  publicId: portfolio/simi/hero
+  alt: Simi menu showing automatic translation enabled and two ways to open a PDF
+  width: 1920
+  height: 1080
+stack:
+  - name: WXT
+  - name: TypeScript
+    logo: typescript
+  - name: React
+    logo: react
+  - name: Tailwind CSS
+    logo: tailwindcss
+  - name: Chrome Translator API
+  - name: PDF.js
+links:
+  live: https://chromewebstore.google.com/detail/simi-%E2%80%94-ingl%C3%A9s-a-espa%C3%B1ol/feikbapkiboicnkcgcinoekdeaiabgnf?hl=es
+  repository: https://github.com/davidmariolc/simi
+---
+
+## Snapshot
+
+- **Role** — I designed, built, and published the extension.
+- **Scope** — English-to-Spanish translation on web pages, in GitHub notebooks, and in PDFs opened in Simi’s viewer.
+- **Result** — Version 0.3.0 is available on the Chrome Web Store.
+
+## The problem
+
+Copying a sentence into another tab breaks the flow of reading documentation in English. I wanted to check a passage in Spanish with the source text still in view, then pick up where I left off.
+
+## Key decisions
+
+- **Anchor the bubble to the selection.** The translation appears next to the source as soon as the reader finishes selecting text. Simi needs access to each site where it’s enabled, and the bubble has to track the selection through scrolling and window resizes.
+- **Use Chrome’s on-device models.** The selected text stays on the device. In return, translation depends on Chrome’s model availability and the page’s permissions. First-time setup may require a download.
+- **Open PDFs in a dedicated viewer.** PDF.js let me bring the same selection interaction to documents. Readers have to open the PDF in Simi, and translation only works when the viewer can open the document and its text is selectable.
+
+## Result
+
+- Readers can use the same selection gesture on a web page, in a GitHub notebook preview, or in the PDF viewer and keep the source passage in view.
+- Playwright tests in CI cover selection on web pages and in notebooks, as well as navigation in the PDF viewer.
+
+## What I’d do differently
+
+- I’d automate the first translation in a clean Chrome profile to catch regressions during activation and model download. That check is currently manual.
+
+## Gallery
+
+<Gallery>
+  <PostImage
+    publicId="portfolio/simi/gallery-1"
+    alt="Simi’s Chrome Web Store listing with the Add to Chrome button"
+    width={1920}
+    height={1080}
+    caption="Readers can install Simi directly from its public store listing."
+  />
+  <PostImage
+    publicId="portfolio/simi/gallery-2"
+    alt="An English sentence highlighted in blue next to a bubble with its Spanish translation"
+    width={1920}
+    height={1080}
+    caption="The bubble keeps the original sentence in view so the reader can continue through the paragraph."
+  />
+</Gallery>

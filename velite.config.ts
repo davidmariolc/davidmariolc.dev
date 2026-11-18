@@ -119,6 +119,7 @@ const PROJECT_CATEGORIES = [
   "landing-page",
   "website",
   "mobile-app",
+  "browser-extension",
   "backend",
   "api",
   "tooling",
