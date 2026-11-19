@@ -1,0 +1,59 @@
+---
+title: Nexo AI
+description: A small chat app for exploring how a model uses earlier messages to answer follow-up questions.
+type: learning
+category: web-app
+date: 2026-11-19
+order: 13
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/nexo-ai/hero
+  alt: Nexo AI welcome screen with a message field and three conversation starters
+  width: 1920
+  height: 1080
+stack:
+  - name: React
+    logo: react
+  - name: TypeScript
+    logo: typescript
+  - name: Vite
+  - name: Python
+    logo: python
+  - name: FastAPI
+    logo: fastapi
+  - name: Groq
+links:
+  live: https://nexo-ai-frontend.vercel.app/
+  repository: https://github.com/davidmariolc/nexo-ai
+---
+
+## Snapshot
+
+- **Goal** — find out whether storing the chat history in the API and sending it with each request was enough to carry a conversation across turns.
+- **Scope** — November 17–19, from the first Groq integration to deployment with streamed replies and in-memory chat history.
+- **What I verified** — two tests passed with a mocked Groq client. The API saves a completed turn and preserves the previous history if a stream is interrupted.
+
+## Why this project
+
+A question like “What's my favorite fruit?” only makes sense if the model sees the earlier message where I told it. A simple chat let me trace that context from the browser to the model and watch how the input token count grows as messages accumulate.
+
+## Key decisions
+
+- **Keep each conversation's history in memory.** FastAPI looks up the thread by ID and sends it to Groq with the new message. I could test the flow without setting up a database. A process restart clears the history, and each turn resends every earlier message.
+- **Save the turn when the stream completes.** I use Server-Sent Events (SSE) to display text as it arrives and save the turn when the provider confirms completion. The browser has to distinguish the provisional text from the saved reply and handle interruptions.
+- **Keep a JSON endpoint for `/history` and `/reset`.** Each command completes in a single response. This leaves the client with two response formats and the API with a shared conversation state to maintain across both.
+
+## What I learned
+
+- Displaying text and saving it happen at different points. If the stream drops, the user may have seen part of the reply and can still pick up from the last completed turn.
+- Vite's proxy handled requests in local development. The deployed demo needed a Vercel rewrite to reach FastAPI through the same path.
+
+## What I'd do differently
+
+- I'd compare the full history with a summary of the earliest turns. I'd measure input tokens and check whether the model can still recall details from the start of the conversation.
+
+## Evidence
+
+- One test checks that a turn received over SSE can continue through the JSON endpoint. The other verifies that an interrupted stream leaves the previous history intact. [API tests](https://github.com/davidmariolc/nexo-ai/blob/6ce7d86b6e9bf1b599e095443f46dd5419827bdd/fastapi/tests/test_chat_stream.py)
+- The rewrite forwards the frontend's `/api/v1` requests to the deployed API. [Vercel configuration](https://github.com/davidmariolc/nexo-ai/blob/cb8b70c7ad641f0a00fd7592082874918692187c/frontend/vercel.json)

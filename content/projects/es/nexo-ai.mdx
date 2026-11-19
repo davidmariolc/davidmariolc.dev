@@ -1,0 +1,59 @@
+---
+title: Nexo AI
+description: Chat de práctica para explorar cómo un modelo usa los mensajes anteriores para responder a una pregunta de seguimiento.
+type: learning
+category: web-app
+date: 2026-11-19
+order: 13
+featured: false
+draft: false
+preview:
+  publicId: portfolio/projects/nexo-ai/hero
+  alt: Pantalla inicial de Nexo AI con el campo de mensaje y tres sugerencias para iniciar un chat
+  width: 1920
+  height: 1080
+stack:
+  - name: React
+    logo: react
+  - name: TypeScript
+    logo: typescript
+  - name: Vite
+  - name: Python
+    logo: python
+  - name: FastAPI
+    logo: fastapi
+  - name: Groq
+links:
+  live: https://nexo-ai-frontend.vercel.app/
+  repository: https://github.com/davidmariolc/nexo-ai
+---
+
+## Snapshot
+
+- **Objetivo** — comprobar si bastaba con guardar el historial en la API y reenviarlo al modelo en cada turno para sostener una conversación.
+- **Alcance** — del 17 al 19 de noviembre, desde la primera integración con Groq hasta el despliegue del chat con respuestas en streaming e historial en memoria.
+- **Qué comprobé** — pasaron dos pruebas con Groq simulado. La API conserva un turno completo y mantiene intacto el historial si la respuesta se interrumpe.
+
+## Por qué este proyecto
+
+Una pregunta como «¿Cuál es mi fruta favorita?» solo tiene sentido si el modelo recibe el mensaje donde se la dije. Elegí un chat sencillo para poder seguir ese recorrido desde el navegador hasta el modelo y observar cómo crece el consumo de tokens de entrada a medida que se acumulan mensajes.
+
+## Decisiones clave
+
+- **Guardar el historial en memoria por conversación.** FastAPI recupera el hilo por su identificador y lo reenvía a Groq junto con el mensaje nuevo. Así pude probar el flujo sin una base de datos. El historial se pierde al reiniciar el proceso y cada turno vuelve a enviar todos los mensajes anteriores.
+- **Confirmar el turno al terminar el streaming.** Uso Server-Sent Events (SSE) para mostrar texto conforme llega y guardo el turno cuando el proveedor confirma que terminó. Eso obliga al navegador a distinguir el texto provisional de la respuesta guardada y a gestionar las interrupciones.
+- **Mantener una ruta JSON para `/history` y `/reset`.** Ambos comandos resuelven toda la operación en una respuesta. A cambio, el cliente usa dos formatos de respuesta y la API debe mantener el mismo estado para ambos.
+
+## Qué aprendí
+
+- Mostrar texto y guardarlo son dos momentos distintos. Si el stream se corta, el usuario puede haber visto parte de la respuesta y aun así retomar la conversación desde el último turno completo.
+- El proxy de Vite solo resolvía las peticiones locales. Para que la demo desplegada llegara a FastAPI por la misma ruta, tuve que configurar un rewrite en Vercel.
+
+## Qué haría distinto
+
+- Compararía el historial completo con un resumen de los primeros turnos. Mediría los tokens de entrada y comprobaría si el modelo todavía recupera los datos que se mencionaron al principio.
+
+## Evidencia
+
+- Una prueba comprueba que un turno recibido por SSE puede continuarse desde la ruta JSON. La otra verifica que el historial sigue intacto después de un stream interrumpido. [Pruebas de la API](https://github.com/davidmariolc/nexo-ai/blob/6ce7d86b6e9bf1b599e095443f46dd5419827bdd/fastapi/tests/test_chat_stream.py)
+- La regla reenvía las peticiones de `/api/v1` del frontend a la API desplegada. [Configuración de Vercel](https://github.com/davidmariolc/nexo-ai/blob/cb8b70c7ad641f0a00fd7592082874918692187c/frontend/vercel.json)
